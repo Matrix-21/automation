@@ -1,4 +1,4 @@
-## Digital Detox Campaign — Automated Engagement Workflow
+## Digital Detox Campaign - Automated Engagement Workflow
 
 Tool: n8n (cloud)
 Trigger: Webhook
