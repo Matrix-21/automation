@@ -1,0 +1,895 @@
+{
+  "name": "Digital Detox Week - AI system",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "digital-detox-form",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -176,
+        0
+      ],
+      "id": "f01ff07e-f6be-43d6-a7ad-31603d2bc035",
+      "name": "Webhook",
+      "webhookId": "70f87e22-2c05-46fd-9335-fcbb502740c5"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get the form data from the webhook\nconst name = $input.first().json.name;\nconst age_group = $input.first().json.age_group;\nconst screen_time = $input.first().json.screen_time_hours;\nconst participate = $input.first().json.participate;\nconst email = $input.first().json.email;\n\n// Calculate risk score from multiple factors\nlet risk_score = 0;\n\n// Factor 1: Screen time (most important factor)\nif (screen_time >= 8) {\n  risk_score += 3;\n} else if (screen_time >= 4) {\n  risk_score += 2;\n} else {\n  risk_score += 1;\n}\n\n// Factor 2: Age group\nif (age_group === \"18-22\") {\n  risk_score += 2;\n} else {\n  risk_score += 1;\n}\n\n// Factor 3: Participation intent\nif (participate === \"No\") {\n  risk_score += 2;\n} else if (participate === \"Maybe\") {\n  risk_score += 1;\n} else {\n  risk_score += 0;\n}\n\n// Determine category from total score\nlet category = \"\";\nlet category_reason = \"\";\n\nif (risk_score >= 5) {\n  category = \"High Risk\";\n  category_reason = \"High screen time with vulnerability factors\";\n} else if (risk_score >= 3) {\n  category = \"Moderate Usage\";\n  category_reason = \"Moderate screen time with awareness potential\";\n} else {\n  category = \"Low Usage\";\n  category_reason = \"Low screen time, good candidate for confirmation\";\n}\n\n// Return all data for next nodes\nreturn {\n  name: name,\n  age_group: age_group,\n  screen_time: screen_time,\n  participate: participate,\n  email: email,\n  risk_score: risk_score,\n  category: category,\n  category_reason: category_reason,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        560,
+        -112
+      ],
+      "id": "83e1075f-78eb-4ca7-9898-6c3a92d0dc07",
+      "name": "Risk Score Calculator"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZuCw0m8i3LrTFydXe3PfmwcYdhtI81rZmqFNQyop-aw",
+          "mode": "list",
+          "cachedResultName": "Digital Detox Week - Responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuCw0m8i3LrTFydXe3PfmwcYdhtI81rZmqFNQyop-aw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuCw0m8i3LrTFydXe3PfmwcYdhtI81rZmqFNQyop-aw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json.name }}",
+            " Age Group": "={{ $json.age_group }}",
+            "Screen Time (hrs)": "={{ $json.screen_time }}",
+            "Willing to Participate": "={{ $json.participate }}",
+            "Email": "={{ $json.email }}",
+            "Risk Score": "={{ $json.risk_score }}",
+            "Category": "={{ $json.category }}",
+            "Category Reason": "={{ $json.category_reason }}",
+            "Timestamp": "={{ $json.timestamp }}",
+            "Action Taken": "Pending"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": " Age Group",
+              "displayName": " Age Group",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Screen Time (hrs)",
+              "displayName": "Screen Time (hrs)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Willing to Participate",
+              "displayName": "Willing to Participate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Risk Score",
+              "displayName": "Risk Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category Reason",
+              "displayName": "Category Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Action Taken",
+              "displayName": "Action Taken",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        -112
+      ],
+      "id": "6e4669b2-096a-4337-9d73-cbdca63e2c89",
+      "name": "Save info in sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "8UlKjk753X9e3qrh",
+          "name": "Digital Detox"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Category }}",
+                    "rightValue": "High Risk",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "696205ad-734f-473e-b4ec-3b37f40e83b2"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "High Risk"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "6d438f3e-ce87-4d92-b26e-777406b57054",
+                    "leftValue": "={{ $json.Category }}",
+                    "rightValue": "Moderate Usage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Moderate Usage"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "4dd26f52-3d2e-4d15-b752-c86fa7c8f2da",
+                    "leftValue": "={{ $json.Category }}",
+                    "rightValue": "Low Usage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Low Usage"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1024,
+        0
+      ],
+      "id": "26cac834-5f9a-4e90-a8f8-46de4d6e2582",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1ZuCw0m8i3LrTFydXe3PfmwcYdhtI81rZmqFNQyop-aw",
+          "mode": "list",
+          "cachedResultName": "Digital Detox Week - Responses",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuCw0m8i3LrTFydXe3PfmwcYdhtI81rZmqFNQyop-aw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ZuCw0m8i3LrTFydXe3PfmwcYdhtI81rZmqFNQyop-aw/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Email": "={{ $('Save info in sheets').first().json.Email }}",
+            "Action Taken": "={{ $('Save info in sheets').first().json.Category }} Email Sent - {{ $now.toISO() }}"
+          },
+          "matchingColumns": [
+            "Email"
+          ],
+          "schema": [
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": " Age Group",
+              "displayName": " Age Group",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Screen Time (hrs)",
+              "displayName": "Screen Time (hrs)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Willing to Participate",
+              "displayName": "Willing to Participate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Risk Score",
+              "displayName": "Risk Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Category Reason",
+              "displayName": "Category Reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Action Taken",
+              "displayName": "Action Taken",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2240,
+        16
+      ],
+      "id": "d42bee4e-b6d4-413a-8c03-5cc9d7d44138",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "8UlKjk753X9e3qrh",
+          "name": "Digital Detox"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openrouter/auto\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a compassionate campaign writer for Reclaim Your Mind, an NGO running Digital Detox Week for Indian youth. Never use placeholders. Always sign off as Reclaim Your Mind Team. Write warm non-judgmental emails.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Write a short educational email for a Digital Detox Week participant. Name: {{ $('Save info in sheets').first().json.Name }}. Age group: {{ $('Save info in sheets').first().json['Age Group'] }}. Daily screen time: {{ $('Save info in sheets').first().json['Screen Time (hrs)'] }} hours. Joining: {{ $('Save info in sheets').first().json['Willing to Participate'] }}. Category: Moderate Usage. Include 2 practical tips to reduce screen time. Mention their specific screen time. Under 150 words. Sign off as The Reclaim Your Mind Team.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1296,
+        16
+      ],
+      "id": "6e077449-b873-495f-99fb-eaf97687195a",
+      "name": "AI email (Moderate)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "rF4vuh1kAirVInWa",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openrouter/auto\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a compassionate campaign writer for Reclaim Your Mind, an NGO running Digital Detox Week for Indian youth. Never use placeholders. Always sign off as Reclaim Your Mind Team. Write warm non-judgmental emails.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Write a warm encouraging awareness email for a Digital Detox Week participant. Name: {{ $('Save info in sheets').first().json.Name }}. Age group: {{ $('Save info in sheets').first().json['Age Group'] }}. Daily screen time: {{ $('Save info in sheets').first().json['Screen Time (hrs)'] }} hours. Joining: {{ $('Save info in sheets').first().json['Willing to Participate'] }}. Category: High Risk. Acknowledge their screen time specifically. Offer encouragement and 2 helpful resources to reduce screen time. Under 150 words. Sign off as The Reclaim Your Mind Team.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1296,
+        -272
+      ],
+      "id": "eba14181-de85-4153-aa08-26b4118ed430",
+      "name": "AI email (High risk)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "rF4vuh1kAirVInWa",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openrouter/auto\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a compassionate campaign writer for Reclaim Your Mind, an NGO running Digital Detox Week for Indian youth. Never use placeholders. Always sign off as Reclaim Your Mind Team. Write warm non-judgmental emails.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Write a celebratory confirmation email for a Digital Detox Week participant. Name: {{ $('Save info in sheets').first().json.Name }}. Age group: {{ $('Save info in sheets').first().json['Age Group'] }}. Daily screen time: {{ $('Save info in sheets').first().json['Screen Time (hrs)'] }} hours. Joining: {{ $('Save info in sheets').first().json['Willing to Participate'] }}. Category: Low Usage. Celebrate their healthy habits. Invite them to inspire friends. Under 150 words. Sign off as The Reclaim Your Mind Team.\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1296,
+        304
+      ],
+      "id": "8f93bc7f-20ef-467b-927d-165219a0670a",
+      "name": "AI email (Low Usage)",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "rF4vuh1kAirVInWa",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiResponse = $input.first().json;\nconst emailContent = aiResponse.choices[0].message.content;\n\nconst userData = $('Save info in sheets').first().json;\n\nreturn {\n  Name: userData.Name,\n  Email: userData.Email,\n  Category: userData.Category,\n  RiskScore: userData['Risk Score'],\n  ScreenTime: userData['Screen Time (hrs)'],\n  emailContent: emailContent\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        16
+      ],
+      "id": "3d35a058-c680-400c-9215-cc33287abe3a",
+      "name": "Extract Email Content (M)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiResponse = $input.first().json;\nconst emailContent = aiResponse.choices[0].message.content;\n\n// Pull original data from the Sheets node\nconst userData = $('Save info in sheets').first().json;\n\nreturn {\n  Name: userData.Name,\n  Email: userData.Email,\n  Category: userData.Category,\n  RiskScore: userData['Risk Score'],\n  AgeGroup: userData['Age Group'],\n  ScreenTime: userData['Screen Time (hrs)'],\n  emailContent: emailContent\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        -272
+      ],
+      "id": "e8c7b145-11a1-4540-804d-d8891bb5fce1",
+      "name": "Extract Email Content(H)"
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiResponse = $input.first().json;\nconst emailContent = aiResponse.choices[0].message.content;\n\nconst userData = $('Save info in sheets').first().json;\n\nreturn {\n  Name: userData.Name,\n  Email: userData.Email,\n  Category: userData.Category,\n  RiskScore: userData['Risk Score'],\n  ScreenTime: userData['Screen Time (hrs)'],\n  emailContent: emailContent\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1568,
+        304
+      ],
+      "id": "b056bb37-39e0-41f6-aaae-bc944906ad05",
+      "name": "Extract Email Content(L)"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "={{ $json.Name }}, tips to improve your screen habits",
+        "emailType": "text",
+        "message": "={{ $json.emailContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1840,
+        16
+      ],
+      "id": "354f193f-84f3-4c9f-95fd-ad4a2db014c4",
+      "name": "Send Email (M)",
+      "webhookId": "2d05d7d4-c6ea-4aee-8562-127523804a17",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vojvbqiukVyPPVZo",
+          "name": "Gmail account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "={{ $json.Name }}, your Digital Detox Week starts here",
+        "emailType": "text",
+        "message": "={{ $json.emailContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1840,
+        -272
+      ],
+      "id": "753ab341-640a-48b7-ad41-3ee2721cba54",
+      "name": "Send Email (H)",
+      "webhookId": "2d05d7d4-c6ea-4aee-8562-127523804a17",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vojvbqiukVyPPVZo",
+          "name": "Gmail account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Email }}",
+        "subject": "={{ $json.Name }}, you're already doing great 🌿",
+        "emailType": "text",
+        "message": "={{ $json.emailContent }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        1840,
+        304
+      ],
+      "id": "0f4c9890-d433-4556-ae0a-0421f2fd278c",
+      "name": "Send Email (L)",
+      "webhookId": "2d05d7d4-c6ea-4aee-8562-127523804a17",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vojvbqiukVyPPVZo",
+          "name": "Gmail account 20"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\n\nlet errors = [];\n\n// Check each field\nif (!body.name) errors.push('Name is missing');\nif (!body.email) errors.push('Email is missing');\nif (!body.screen_time_hours && body.screen_time_hours !== 0) errors.push('Screen time is missing');\n\nif (body.screen_time_hours < 0 || body.screen_time_hours > 24) {\n  errors.push('Screen time must be between 0 and 24 hours');\n}\n\nconst emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\nif (body.email && !emailRegex.test(body.email)) {\n  errors.push('Email format is invalid');\n}\n\nif (body.participate && !['Yes', 'No', 'Maybe'].includes(body.participate)) {\n  errors.push('Participation must be Yes, No or Maybe');\n}\n\n// If errors found — flag but continue\nif (errors.length > 0) {\n  return {\n    name: body.name || 'Unknown',\n    email: body.email || '',\n    age_group: body.age_group || 'Not specified',\n    screen_time_hours: Number(body.screen_time_hours) || 0,\n    participate: body.participate || 'Unknown',\n    isValid: false,\n    validationErrors: errors.join(', ')\n  };\n}\n\n// All good\nreturn {\n  name: body.name,\n  email: body.email.toLowerCase().trim(),\n  age_group: body.age_group || 'Not specified',\n  screen_time_hours: Number(body.screen_time_hours),\n  participate: body.participate,\n  isValid: true,\n  validationErrors: ''\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        64,
+        0
+      ],
+      "id": "2ec75a3a-2d49-44de-a8b7-36f104f0c29e",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e723670b-84c2-48ac-9be5-5b1cf6437242",
+              "leftValue": "={{ $json.isValid }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        288,
+        0
+      ],
+      "id": "5518c9c6-ea41-443b-9003-eafe27c93642",
+      "name": "IF Node"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "We couldn't process your Digital Detox Week form",
+        "emailType": "text",
+        "message": "=Hi {{ $json.name }},  Thank you for your interest in Digital Detox Week  by Reclaim Your Mind.  Unfortunately we couldn't process your submission  due to the following issue:  {{ $json.validationErrors }}  Please resubmit your form with the correct  information. We'd love to have you join us!  Reclaim Your Mind Team",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        144
+      ],
+      "id": "230735d1-3aaa-496d-a1d3-c77cea0c0e7f",
+      "name": "Fallback Email",
+      "webhookId": "7f86cdce-4c94-49b0-ade4-6c56c1bda97e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "vojvbqiukVyPPVZo",
+          "name": "Gmail account 20"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Risk Score Calculator": {
+      "main": [
+        [
+          {
+            "node": "Save info in sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save info in sheets": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI email (High risk)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI email (Moderate)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI email (Low Usage)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI email (High risk)": {
+      "main": [
+        [
+          {
+            "node": "Extract Email Content(H)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI email (Moderate)": {
+      "main": [
+        [
+          {
+            "node": "Extract Email Content (M)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI email (Low Usage)": {
+      "main": [
+        [
+          {
+            "node": "Extract Email Content(L)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Email Content(H)": {
+      "main": [
+        [
+          {
+            "node": "Send Email (H)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Email Content (M)": {
+      "main": [
+        [
+          {
+            "node": "Send Email (M)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Email Content(L)": {
+      "main": [
+        [
+          {
+            "node": "Send Email (L)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (H)": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (M)": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email (L)": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "IF Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Node": {
+      "main": [
+        [
+          {
+            "node": "Risk Score Calculator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "aaa91d95-e72b-4a19-9f29-6ce501ca0f57",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "4ea9905a994d626ba22f117a5aba0eda955b66919ae2d0f3c49ffb1300d4055e"
+  },
+  "id": "3Vxk8DF9gbCJxQBF",
+  "tags": []
+}
